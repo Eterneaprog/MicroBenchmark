@@ -1,0 +1,11 @@
+
+
+      microbenchmark(
+        ...,
+        list = NULL,
+        times = 100L,
+        unit,
+        check = NULL,
+        control = list(),
+        setup = NULL
+      )
