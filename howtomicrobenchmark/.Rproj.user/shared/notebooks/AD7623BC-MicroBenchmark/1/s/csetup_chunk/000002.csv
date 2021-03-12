@@ -1,0 +1,5 @@
+"0","library(learnr)"
+"2","le package ‘learnr’ a été compilé avec la version R 4.0.4"
+"0","library(ggplot2)"
+"0","library(microbenchmark)"
+"0","knitr::opts_chunk$set(echo = FALSE)"
