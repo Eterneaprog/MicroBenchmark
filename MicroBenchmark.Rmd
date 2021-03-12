@@ -1,0 +1,178 @@
+---
+title: "Microbenchmarking"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: "Nous allons vous apprendre à utiliser Microbenchmark !"
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Bienvenue ! 
+
+### Matériel nécéssaire : 
+
+ - la librairie microbenchmark installée : copiez install.packages("microbenchmark") dans votre console 
+- La librairie chargée dans cette fenètre (appuyer sur Run Code) :
+
+``````{r installation, exercise=TRUE, exercise.lines = 1}
+
+library(microbenchmark)
+
+```
+
+- 100g de sucre cristal
+- 2 blancs d'oeuf
+- un batteur et un four préchauffé à 100°C
+
+Battez les blancs en ajoutant le sucre progressivement, réalisez une poche à douille et ...
+Ah non, vous voulez apprendre à Microbenchmarker, c'est vrai !
+
+### Ce qu'on fait aujourd'hui: 
+
+L'objectif, c'est de comparer deux morceaux de codes qui produisent le même résultat pour savoir lequel est le plus rapide. Microbenchmarker : c'est éxécuter chacune des opérations en boucle plusieurs fois de suite et déterminer avec une moyenne le meilleur des codes qu'on a à disposition.
+
+La bonne nouvelle en R, c'est que vous n'avez pas à le coder vous même ! Des gens brillant l'ont fait pour vous et encore mieux : c'est simple d'utilisation  et rapide
+
+Nous vous proposons deux séries d'exercices pour apprendre à comparer la vitesse de vos codes :
+
+Dans la première, c'est le kit de survie dont vous aurez besoin pour optimiser vos programmes R et abaisser les temps de calculs.
+
+La seconde série rentre dans le détail des options. Elle interessera ceux qui ont pour objectif de perfectionner leurs codes et gagner le plus de temps dans l'éxécution de gros codes.
+
+C'est parti ? 
+
+## Kit de survie en milieu de complexité
+
+### La syntaxe :
+
+```{r library, message=FALSE, warning=FALSE, exercise=FALSE, paged.print=FALSE}
+library(microbenchmark)
+```
+
+Dans la suite, nous utiliserons des requètes du type : 
+
+```{r syntaxelearnR, exercise=TRUE, exercise.lines = 1}
+
+print(microbenchmark( "la/les fonction(s) à tester" )) 
+
+```
+
+car learnR ne permet pas l'affichage direct du résultat sans passer par print. Cette syntaxe est correcte en pratique dans R. 
+Sachez cependant que dans la console R, cette syntaxe fournit les mêmes résultats et est plus simple : 
+
+```{r syntaxeR, exercise=TRUE, exercise.lines = 1}
+microbenchmark( "la/les fonction(s) à tester" )
+```
+
+### Exercice 1 : A vous d'essayer
+
+Essayez de calculer le temps nécessaire pour assigner une valeur à une variable (exemple : associer 10 à la variable x)
+
+```{r exo1, exercise=TRUE, exercise.lines = 1 }
+print( "Ton code" ) 
+```
+
+```{r exo1-solution, exercise.lines = 1}
+
+print(microbenchmark(x <- 10))
+
+```
+
+Facile non ? Il suffit de copier le morceau de code pour évaluer le temps de calcul. Sur ce genre d'opérations très (trop) simples, un message d'alerte peut être renvoyé, c'est normal, cela veut dire que l'éxécution est tellement rapide qu'on a du mal à évaluer son temps d'action.
+
+Intéressons nous plutôt au résultat. On voit qu'il y a l'unité de mesure, ici le nanoseconde. 
+Le plus important, c'est la moyenne, et le max. Pourquoi ? 
+Parce que cela correspond respectivement à la complexité moyenne et la complexité au pire ! Selon ce que l'on code, l'un ou l'autre est plus intéressant. 
+
+On va regarder les autres colonnes dans la suite
+
+### Exercice 2 : Cette fois, on compare !
+
+exprimez 3*2 de différentes manières et comparez les temps de calculs : (oui, une multiplication, ca se décompose)
+
+```{r exo2, exercise=TRUE}
+
+
+
+```
+
+```{r exo2-solution}
+
+print(microbenchmark(3*2, 2+2+2, 3+3))
+
+#Plus long mais tout aussi correct :
+
+print(microbenchmark(3*2))
+print(microbenchmark(2+2+2))
+print(microbenchmark(3*2))
+
+```
+
+99% du temps, ce simple exemple est ce dont on a besoin dans la vraie vie. Regardons donc les résultats dans le détail cette fois : 
+
+On a les expressions et leurs résultats rangés ligne par ligne. 
+
+La colonne lq correspond au « low quartile ». C'est le 1er quartile des temps d’exécution de chaque expression. En pratique, au moins 25% des tentatives ont mise ce temps au maximum.
+
+Uq, c'est le « upper quartile », même principe mais avec le 3ème quartile.
+
+Enfin, la colonne neval pour nombre d'évaluations. C'est une donnée importante à prendre en compte même si la gestion automatique est souvent très bonne de la part de Microbenchmark.
+
+
+```{r quiz}
+question("Quelle est la meilleure des trois versions proposée dans la correction ?",
+  answer("La première" , message = "effectivement, c'est parmis les deux meilleures options, mais en executant plusieurs fois le code, on ne peut pas dire si 3*2 et plus ou moins rapide que 3+3 en l'état. La partie suivante vous apprends à déterminer même dans ce cas là ;)"),
+  answer("La seconde", message = "C'est l'option la moins intuitive, rendez vous dans la partie suivante pour comprendre pourquoi dans cet exemple, les résultats ne sont pas toujours exacts"),
+  answer("La troisième", message = "effectivement, c'est parmis les deux meilleures options, mais en executant plusieurs fois le code, on ne peut pas dire si 3*2 et plus ou moins rapide que 3+3 en l'état. La partie suivante vous apprends à déterminer même dans ce cas là ;)"),
+  answer("c'est dur à dire", correct = TRUE, message = "Oui, et pourtant on peut quand même trancher, en utilisant les techniques de la partie suivante ;)")
+)
+```
+
+
+## Techniques avancées
+
+Cette fois si, ca ne rigole plus. On va comprendre pourquoi l'exemple d'avant n'a pas fonctionné. 
+
+Le principal problème sur les morceaux de codes si rapides, c'est qu'il faut les éxécuter un grand nombre de fois pour que ca marche, c'est le principe même du benchmarking. Ceux avec l'oeil le plus affuté auront remarqué que le nombre d'éxécution était seulement de ... 100. (C'est le fameux neval)
+
+Quand on y pense, c'est peu quand on mesure à l'ordre de la nanoseconde. Avec l'option times, vous pouvez tenter de déterminer un vainqueur même dans ce genre de situation en affinant les résultats.
+Des fois ca marche, et des fois non.
+
+### Exercice 3 : L'exercice 2 était-il solvable ?
+
+```{r exo3, exercise=TRUE, exercise.lines = 3 }
+
+
+
+```
+
+```{r exo3-hint, exercise.lines = 2}
+
+#On met un L à la fin du nombre d'itérations (1000L par exemple)
+#Ne me demandez pas pourquoi ... 
+
+```
+
+```{r exo3-solution, exercise.lines = 1}
+
+print(microbenchmark(3*2, 2+2+2, 3+3, times = 100000L))
+
+```
+
+```{r quiz2}
+
+question("Y a t-il vraiment un code plus rapide entre 3*2 et 3+3 ?",
+  answer("Oui" , message = "En réalité, peut-être, mais le concepteur de ce tutoriel a échoué à le montrer... Si il existe une différence, il y a fort à parier qu'il est difficile de la mesurer"),
+  answer("Non", correct = TRUE, message = " A priori, c'est vraiment pareil, en tout cas, si il y a une différence, elle est trop faible pour qu'on est à s'en préoccuper dans notre code en pratique")
+  
+)
+```
+
+###
+
+## Résumé
+
+###
