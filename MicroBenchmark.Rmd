@@ -7,28 +7,15 @@ description: "Nous allons vous apprendre à utiliser Microbenchmark !"
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(ggplot2)
+library(microbenchmark)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Bienvenue ! 
 
-### Matériel nécéssaire : 
-
- - la librairie microbenchmark installée : copiez install.packages("microbenchmark") dans votre console 
-- La librairie chargée dans cette fenètre (appuyer sur Run Code) :
-
-``````{r installation, exercise=TRUE, exercise.lines = 1}
-
-library(microbenchmark)
-
-```
-
-- 100g de sucre cristal
-- 2 blancs d'oeuf
-- un batteur et un four préchauffé à 100°C
-
-Battez les blancs en ajoutant le sucre progressivement, réalisez une poche à douille et ...
-Ah non, vous voulez apprendre à Microbenchmarker, c'est vrai !
+Cadeau, on se charge d'importer les librairies dont on aura besoin pour aujourd'hui à votre place.
+Dans vos codes : pensez à library(microbenchmark) et library(GGplot2) !
 
 ### Ce qu'on fait aujourd'hui: 
 
@@ -47,10 +34,6 @@ C'est parti ?
 ## Kit de survie en milieu de complexité
 
 ### La syntaxe :
-
-```{r library, message=FALSE, warning=FALSE, exercise=FALSE, paged.print=FALSE}
-library(microbenchmark)
-```
 
 Dans la suite, nous utiliserons des requètes du type : 
 
@@ -89,27 +72,26 @@ Parce que cela correspond respectivement à la complexité moyenne et la complex
 
 On va regarder les autres colonnes dans la suite
 
-### Exercice 2 : Cette fois, on compare !
+### Exercice 2 : L'exemple le plus important
 
-exprimez 3*2 de différentes manières et comparez les temps de calculs : (oui, une multiplication, ca se décompose)
+Créez une matrice de 2 manières différentes et evaluez la vitesse des codes.
 
-```{r exo2, exercise=TRUE}
+  Bonus : Nous avons choisi la matrice qui contient les nombres de 1 à 1000
+  de gauche à droite car elle peut être créé d'au moins
+  trois manières différentes.
+
+```{r exo2, exercise=TRUE, exercice.lines = 3}
 
 
+
+```
+
+```{r exo2-solution,  exercice.lines = 3}
+
+print(microbenchmark(c(1:1000), seq(1,1000),1:1000))
 
 ```
 
-```{r exo2-solution}
-
-print(microbenchmark(3*2, 2+2+2, 3+3))
-
-#Plus long mais tout aussi correct :
-
-print(microbenchmark(3*2))
-print(microbenchmark(2+2+2))
-print(microbenchmark(3*2))
-
-```
 
 99% du temps, ce simple exemple est ce dont on a besoin dans la vraie vie. Regardons donc les résultats dans le détail cette fois : 
 
@@ -121,13 +103,46 @@ Uq, c'est le « upper quartile », même principe mais avec le 3ème quartile.
 
 Enfin, la colonne neval pour nombre d'évaluations. C'est une donnée importante à prendre en compte même si la gestion automatique est souvent très bonne de la part de Microbenchmark.
 
+La réponse devrait donc être facile à trouver : 
+
+```{r quiz1}
+question("Quelle est la meilleure fonction pour coder la matrice de la solution ?",
+  answer("La première" , message = "Retente d'éxécuter la fonction ci dessus avec le code de la correction"),
+  answer("La seconde", message = "Retente d'éxécuter la fonction ci dessus avec le code de la correction"),
+  answer("La troisième", correct = TRUE, message = "Sur l'ensemble des aspects, cette solution est la plus rapide"),
+  answer("c'est dur à dire", message = "On peut trancher dans cet exemple, regarde à nouveau les résultats avec l'explication au dessus)")
+)
+```
+
+### Exercice 3 : Un autre (bon ?) exemple  !
+
+exprimez 3*2 de différentes manières et comparez les temps de calculs : (oui, une multiplication, ca se décompose)
+
+```{r exo3, exercise=TRUE}
+
+
+
+```
+
+```{r exo3-solution}
+
+print(microbenchmark(3*2, 2+2+2, 3+3))
+
+#Plus long mais tout aussi correct :
+
+print(microbenchmark(3*2))
+print(microbenchmark(2+2+2))
+print(microbenchmark(3*2))
+
+```
+
 
 ```{r quiz}
 question("Quelle est la meilleure des trois versions proposée dans la correction ?",
   answer("La première" , message = "effectivement, c'est parmis les deux meilleures options, mais en executant plusieurs fois le code, on ne peut pas dire si 3*2 et plus ou moins rapide que 3+3 en l'état. La partie suivante vous apprends à déterminer même dans ce cas là ;)"),
   answer("La seconde", message = "C'est l'option la moins intuitive, rendez vous dans la partie suivante pour comprendre pourquoi dans cet exemple, les résultats ne sont pas toujours exacts"),
   answer("La troisième", message = "effectivement, c'est parmis les deux meilleures options, mais en executant plusieurs fois le code, on ne peut pas dire si 3*2 et plus ou moins rapide que 3+3 en l'état. La partie suivante vous apprends à déterminer même dans ce cas là ;)"),
-  answer("c'est dur à dire", correct = TRUE, message = "Oui, et pourtant on peut quand même trancher, en utilisant les techniques de la partie suivante ;)")
+  answer("c'est dur à dire", correct = TRUE, message = "Oui, mais parfois on peut quand même trancher, rendez vous dans la partie suivante pour essayer !)")
 )
 ```
 
@@ -136,27 +151,31 @@ question("Quelle est la meilleure des trois versions proposée dans la correctio
 
 Cette fois si, ca ne rigole plus. On va comprendre pourquoi l'exemple d'avant n'a pas fonctionné. 
 
-Le principal problème sur les morceaux de codes si rapides, c'est qu'il faut les éxécuter un grand nombre de fois pour que ca marche, c'est le principe même du benchmarking. Ceux avec l'oeil le plus affuté auront remarqué que le nombre d'éxécution était seulement de ... 100. (C'est le fameux neval)
+Le principal problème sur les morceaux de codes si rapides, c'est qu'il faut les éxécuter un grand nombre de fois pour que ca marche, c'est le principe même du benchmarking. Ceux avec l'oeil le plus affuté auront remarqué que le nombre d'éxécution était seulement de ... 100. (C'est le fameux neval de l'exemple 2)
 
 Quand on y pense, c'est peu quand on mesure à l'ordre de la nanoseconde. Avec l'option times, vous pouvez tenter de déterminer un vainqueur même dans ce genre de situation en affinant les résultats.
 Des fois ca marche, et des fois non.
 
-### Exercice 3 : L'exercice 2 était-il solvable ?
+### Exercice 4 : L'exercice 3 était-il solvable ?
 
-```{r exo3, exercise=TRUE, exercise.lines = 3 }
+Reprenez le code de l'exercice 3, mais modifiez le nombre d'éxécution avec l'option times.
+
+```{r exo4, exercise=TRUE, exercise.lines = 3 }
 
 
 
 ```
 
-```{r exo3-hint, exercise.lines = 2}
+```{r exo4-hint, exercise.lines = 3}
 
 #On met un L à la fin du nombre d'itérations (1000L par exemple)
 #Ne me demandez pas pourquoi ... 
+#Attention aux parenthèses, times est une option de microbenchmark, pas de print
 
 ```
 
-```{r exo3-solution, exercise.lines = 1}
+
+```{r exo4-solution, exercise.lines = 1}
 
 print(microbenchmark(3*2, 2+2+2, 3+3, times = 100000L))
 
@@ -165,13 +184,92 @@ print(microbenchmark(3*2, 2+2+2, 3+3, times = 100000L))
 ```{r quiz2}
 
 question("Y a t-il vraiment un code plus rapide entre 3*2 et 3+3 ?",
-  answer("Oui" , message = "En réalité, peut-être, mais le concepteur de ce tutoriel a échoué à le montrer... Si il existe une différence, il y a fort à parier qu'il est difficile de la mesurer"),
-  answer("Non", correct = TRUE, message = " A priori, c'est vraiment pareil, en tout cas, si il y a une différence, elle est trop faible pour qu'on est à s'en préoccuper dans notre code en pratique")
-  
+  answer("Oui" , message = "En réalité, peut-être, mais le concepteur de ce tutoriel a échoué à le montrer... pour l'instant. "),
+  answer("Non", correct = TRUE, message = " Pour l'instant, c'est la réponse correcte, mais peut-être qu'une différence existe (très fine). Rendez vous à l'exercice 6 ")
 )
+
+``` 
+
+Au dela d'être un prétexte pour vous apprendre à changer le nombre d'itérations, cet exemple permet clairement d'éliminer 2+2+2 sans aucun doute.
+
+### Exercice 5 : Sur plusieurs lignes ? 
+
+Jusqu'ici, on a comparé des fonctions "simples". Voyons comment cela se passe dans un exemple réaliste.
+Créez deux fonctions prenant en argument 2 nombres a et b et cherchant le plus petit k tel que k*a soit supérieur à b. Comparez ensuite ces fonctions entre elles.
+
+Le premier indice contient la structure et le second, la première fonction.
+
+```{r exo5, exercise=TRUE, exercise.lines = 3 }
+
+#Inserer la structure
+
 ```
 
-###
+```{r exo5-hint, exercise.lines = 2}
+
+# Inserer un indice ici
+
+```
+
+```{r exo5-solution, exercise.lines = 1}
+
+# Inserer la solution ici
+
+```
+
+Preuve qu'on peut aussi faire du microbenchmark sans que la ligne de code soit illisible
+
+### Exercice 6 : "Jamais deux sans trois"
+
+Nouvelle technique avancée : un graphique pour y voir plus clair.
+Pour ca, on va utiliser GGplot2. 
+
+Cette librairie possède une fonction nommée autoplot. Elle fait exactement ce que vous pensez : un graphe parfait sans que vous n'ayez quoi que ce soit à lui préciser. Si ca n'est pas clair ou que c'est une découverte : le premier indice est la pour vous !
+
+Comparez graphiquement les temps d’exécution de 3*2 et 3+3 avec autplot.
+
+```{r exo6, message=FALSE, warning=FALSE, exercise=TRUE}
+
+
+
+```
+
+```{r exo6-hint, message=FALSE, warning=FALSE}
+
+#?Autoplot donne ceci: autoplot(object, ...)
+#object	: un objet, dont la classe determine le comportement de autoplot
+
+```
+
+```{r exo6-solution, message=FALSE, warning=FALSE}
+
+res <- microbenchmark(3*2, 3+3, times = 10000L)
+	    autoplot(res)
+
+
+```
+
+Les plus habiles cumuleront même cette technique avec celle du 5 et du 4 pour avoir de la précision et de la propreté !
+
+Le graphique est vraiment pratique et rapideà realiser, c'est une bonne solution.
+
+### Exercice 7 : Les autres arguments, part 1
+
+Microbenchmark possède un argument que nous n'avons pas évoqué jusqu'ici : control
+
+C'est une liste d'aguments dont le premier  est "order" et ses valeurs sont : 
+- random (l'option par défaut)
+- inorder
+- block
+
+Cela agit sur l'ordre dans lequel microbenchmark effectue ses mesures. D'abord au hasard parmis les fonctions. Ensuite, dans l'ordre (1-2-3-1-2-3 ...). Enfin, en block, chaque type à la suite.
+
+
+
+
+### Exercice 8 :
+
+### Exercice 9 :
 
 ## Résumé
 
