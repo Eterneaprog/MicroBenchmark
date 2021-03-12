@@ -262,12 +262,70 @@ C'est une liste d'aguments dont le premier  est "order" et ses valeurs sont :
 - inorder
 - block
 
-Cela agit sur l'ordre dans lequel microbenchmark effectue ses mesures. D'abord au hasard parmis les fonctions. Ensuite, dans l'ordre (1-2-3-1-2-3 ...). Enfin, en block, chaque type à la suite.
+Cela agit sur l'ordre dans lequel microbenchmark effectue ses mesures. D'abord au hasard parmis les fonctions. Ensuite, dans l'ordre (1-2-3-1-2-3 ...). Enfin, en block, chaque type à la suite (100 fois la première fonction, 100 fois la seconde, ...).
+
+```{r exo7, message=FALSE, warning=FALSE, exercise=TRUE}
 
 
 
+```
 
-### Exercice 8 :
+```{r exo7-hint, message=FALSE, warning=FALSE}
+
+#La structure est celle la : control est une liste d'arguments
+
+print(microbenchmark(x <- 10, control = list( )))
+
+```
+
+```{r exo7-solution, message=FALSE, warning=FALSE}
+
+print(microbenchmark(x <- 10, control = list( order = "random"  )))
+print(microbenchmark(x <- 10, control = list( order = "inorder" )))
+print(microbenchmark(x <- 10, control = list( order = "block"   )))
+
+```
+
+
+### Exercice 8 : Les autres arguments, part 2
+
+Dans la famille des arguments de controle : warmup
+
+Il permet de déterminer combien d'évaluation "dans le vide" seront faites avant de lancer les mesures. Par défaut, il vaut 2, mais on peut l'augmenter pour modéliser les situations d'éxécution de code en continu.
+
+Essayez de modifier microbenchmark(x <- 10) avec l'argument de control warmup. En le positionnant à 0 dans un premier exemple puis à 10 dans un second.
+ 
+```{r exo8, message=FALSE, warning=FALSE, exercise=TRUE}
+
+
+
+```
+
+```{r exo8-hint, message=FALSE, warning=FALSE}
+
+#La structure est celle la : control est une liste d'arguments
+
+print(microbenchmark(x <- 10, control = list( )))
+
+```
+
+```{r exo8-solution, message=FALSE, warning=FALSE}
+
+print(microbenchmark(x <- 10, control = list(warmup =  0)))
+print(microbenchmark(x <- 10, control = list(warmup = 10)))
+
+```
+
+
+```{r quiz3}
+
+question(" Constatez vous une différence en utilisant un warmup? ?",
+  answer("Oui" , correct = TRUE, message = " Effectivement, le maximum est quasiment toujours plus faible pour la version avec warmup. "),
+  answer("Non", message = "En moyenne, vous auriez raison. Mais le maximum est quasiment toujours plus faible pour la version avec warmup. Retenez que la pire évaluation se fait quasiment toujours dans les premières évaluations du benchmarking (et qu'on peut vouloir la mesurer par ailleurs)")
+) 
+
+``` 
+Les premières éxécutions sont systématiquement plus lentes. 
 
 ### Exercice 9 :
 
