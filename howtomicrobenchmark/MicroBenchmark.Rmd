@@ -194,30 +194,34 @@ Au dela d'être un prétexte pour vous apprendre à changer le nombre d'itérati
 
 ### Exercice 5 : Sur plusieurs lignes ? 
 
-Jusqu'ici, on a comparé des fonctions "simples". Voyons comment cela se passe dans un exemple réaliste.
-Créez deux fonctions prenant en argument 2 nombres a et b et cherchant le plus petit entier positif k tel que (k x a) > b. Comparez ensuite ces fonctions entre elles.
+Jusqu'ici, on a comparé des fonctions "simples". Voyons, maintenant que vous êtes aguerris, comment cela se passe dans un exemple réaliste.
+Créez deux fonctions prenant en argument 2 nombres a et b, et cherchant le plus petit entier k compris entre 1 et 1000, tel que (k fois a) > b. Comparez ensuite ces fonctions entre elles.
 
-Le premier indice contient la structure et le second, la première fonction.
-
-```{r exo5, exercise=TRUE, exercise.lines = 3 }
-
-#Inserer la structure
-
+```{r exo5, exercise=TRUE, exercise.lines = 15}
 ```
 
-```{r exo5-hint, exercise.lines = 2}
-
-# Inserer un indice ici
-
+```{r exo5-hint, exercise.lines = 3}
+#La première méthode qui vient à l'esprit est de réaliser une boucle while.
+#La seconde possibilité est de créer un vecteur V contenant toutes les valeurs possibles de k, et de tester si la multiplication de chaque élément du vecteur par a est supérieure à b. Il ne reste plus alors qu'à sélectionner le premier élément V_i du vecteur tel que a*V_i > b soit évalué à TRUE.
 ```
 
-```{r exo5-solution, exercise.lines = 1}
-
-# Inserer la solution ici
-
+```{r exo5-solution, exercise.lines = 15}
+f1 <- function(a, b) {
+  k <- 0
+  while ((k*a <= b) && k <= 1000) {
+    k <- k + 1
+  }
+  k
+}
+f2 <- function(a, b) {
+  vector_k <- c(0:1000)
+  k <- vector_k[(vector_k * a) > b][1]
+  k
+}
+print(microbenchmark(f1, f2))
 ```
 
-Preuve qu'on peut aussi faire du microbenchmark sans que la ligne de code soit illisible
+Preuve qu'on peut aussi faire du microbenchmark sans que la ligne de code soit illisible.
 
 ### Exercice 6 : "Jamais deux sans trois"
 
