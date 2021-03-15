@@ -11,6 +11,11 @@ Ce tutoriel est fait pour toi ! (Quelle chance alors)
 Equipe toi maintenant du kit de survie en milieu de complexité et fait tourner tes programmes plus vite que la lumière !
 
 Procédure pour lancer le tutoriel :
-- Installe le package howtomicrobenchmark en téléchargeant notre zip
 
-- Execute la commande suivante dans ta console : rmarkdown::run("MicroBenchmark.Rmd") en ayant définie howtomicrobenchmark comme dossier de travail.
+- Installe le package howtomicrobenchmark en téléchargeant notre fichier
+(Il suffit de mettre le répertoire howtomicrobenchmark en répertoire de travail et de rentrer devtools::install() dans la console)
+
+- Execute les commandes suivantes dans ta console : library("howtomicrobenchmark") 
+learnr::run_tutorial("microbenchmark", package = "howtomicrobenchmark")
+
+Bonne chance !
