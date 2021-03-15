@@ -403,3 +403,24 @@ f <- function(a){
 }
 print(microbenchmark(2 + 2, a + 2, times = 1000L, setup = f(a)))
 ```
+
+### Quizz résumé
+
+Pour vérifier que vous avez bien retenu le principal, voici un petit quizz qui résume les choses importantes à savoir sur microbenchmark
+
+```{r quiz3}
+question(" Que calcule t'on avec microbenchmark ?",
+  answer("Le temps d'éxécution d'une ou plusieurs fonctions, à un instant t" , message = " Pas exactement, microbenchmark rélaise le cakcul à plusieurs reprises, et détermine le temps d'éxécution moyen, mais aussi des temps caractéristiques, comme le maximum et le minimum"),
+  answer("Des temps d'éxécution caractéristiques d'une ou plusieurs fonctions sur plusieurs tests, comme la moyenne ou les extremums", correct = TRUE, message = "Exactement, tu as bien compris quand t'en servir ! "),
+  answer("Le temps d'éxécution d'un grand échantillon de fonctions pour déterminer la plus rapide", message = "c'est en effet possible, mais pas automatique. Le but est souvent de comparer 2 ou 3 méthodes pour déterminer la plus rapide en moyenne ou dans le pire des cas, selon ce qui nous intéresse")
+) 
+question("Quand utiliser microbenchmark ?",
+  answer("A la fin du programme pour déterminer la vitesse que prendra mon programme lors de son éxécution", message = "C'est possible mais il faut que le programme soit relativement court. Comme Microbenchmark va éxécuter le programme un grand nombre de fois, si votre temps d'éxécution est déja long, le calcul de microbenchmark sera excessivement long" ),
+  answer("Lorsque je veux déterminer la vitesse d'éxécution d'un petit bout de code", correct = TRUE ,message = "Exactement, microbenchmark est fait pour évaluer des codes relativement court")
+)
+question("Quelle option utilise t'on pour modifier le nombre de tests de la fonction étudiée par microbenchmark"
+  answer("setup", message = "Non, setup permet d'effectuer une action avant l'éxécution de la fonction, sans l'évaluer"),
+  answer("check", message = "Non, check permet de vérifier que les fonctions évaluées font la même chose"),
+  answer("times", correct = TRUE, message = "Oui, tu as tout compris, tu peux maintenant utiliser microbenchmark dans tout tes programmes, et ainsi gagner jusqu'a plusieurs nanosecondes ! Le temps c'est de l'argent !")
+)
+``` 
