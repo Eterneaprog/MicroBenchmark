@@ -1,0 +1,24 @@
+{
+    "id": "45B30329",
+    "path": "~/GitHub/MicroBenchmark/howtomicrobenchmark/inst/tutorials/microbenchmark/MicroBenchmark.Rmd",
+    "project_path": "inst/tutorials/microbenchmark/MicroBenchmark.Rmd",
+    "type": "r_markdown",
+    "hash": "1389572494",
+    "contents": "",
+    "dirty": false,
+    "created": 1615832267302.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "216,0",
+        "scrollLine": "209"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1615832329,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1615832329472,
+    "read_only": false,
+    "read_only_alternatives": []
+}

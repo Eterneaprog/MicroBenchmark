@@ -151,14 +151,14 @@ question("Quelle est la meilleure des trois versions proposée dans la correctio
 
 Cette fois si, ca ne rigole plus. On va comprendre pourquoi l'exemple d'avant n'a pas fonctionné. 
 
-Le principal problème sur les morceaux de codes si rapides, c'est qu'il faut les éxécuter un grand nombre de fois pour que ca marche, c'est le principe même du benchmarking. Ceux avec l'oeil le plus affuté auront remarqué que le nombre d'exécution était seulement de ... 100. (C'est le fameux neval de l'exemple 2)
+Le principal problème sur les morceaux de codes si rapides, c'est qu'il faut les éxécuter un grand nombre de fois pour que ca marche, c'est le principe même du benchmarking. Ceux avec l'oeil le plus affuté auront remarqué que le nombre d'éxécution était seulement de ... 100. (C'est le fameux neval de l'exemple 2)
 
 Quand on y pense, c'est peu quand on mesure à l'ordre de la nanoseconde. Avec l'option times, vous pouvez tenter de déterminer un vainqueur même dans ce genre de situation en affinant les résultats.
 Des fois ca marche, et des fois non.
 
 ### Exercice 4 : L'exercice 3 était-il solvable ?
 
-Reprenez le code de l'exercice 3, mais modifiez le nombre d'exécution avec l'option times, qui permet de changer le nombre d'évaluations réalisées par la fonction microbenchmark.
+Reprenez le code de l'exercice 3, mais modifiez le nombre d'éxécution avec l'option times, qui permet de changer le nombre d'évaluations réalisées par la fonction microbenchmark.
 
 ```{r exo4, exercise=TRUE, exercise.lines = 3 }
 
@@ -194,42 +194,30 @@ Au dela d'être un prétexte pour vous apprendre à changer le nombre d'itérati
 
 ### Exercice 5 : Sur plusieurs lignes ? 
 
-Jusqu'ici, on a comparé des fonctions "simples". Voyons, maintenant que vous êtes aguerris, comment cela se passe dans un exemple réaliste.
-Créez deux fonctions prenant en argument 2 nombres a et b, et cherchant le plus petit entier k compris entre 1 et 1000, tel que (k fois a) > b. Comparez ensuite ces fonctions entre elles.
+Jusqu'ici, on a comparé des fonctions "simples". Voyons comment cela se passe dans un exemple réaliste.
+Créez deux fonctions prenant en argument 2 nombres a et b et cherchant le plus petit entier positif k tel que (k x a) > b. Comparez ensuite ces fonctions entre elles.
 
-```{r exo5, exercise=TRUE, exercise.lines = 15}
+Le premier indice contient la structure et le second, la première fonction.
 
+```{r exo5, exercise=TRUE, exercise.lines = 3 }
 
-```
-
-```{r exo5-hint, exercise.lines = 3}
-
-#La première méthode qui vient à l'esprit est de réaliser une boucle while.
-#La seconde possibilité est de créer un vecteur V contenant toutes les valeurs possibles de k, et de tester si la multiplication de chaque élément du vecteur par a est supérieure à b. Il ne reste plus alors qu'à sélectionner le premier élément V_i du vecteur tel que a*V_i > b soit évalué à TRUE.
+#Inserer la structure
 
 ```
 
-```{r exo5-solution, exercise.lines = 15}
+```{r exo5-hint, exercise.lines = 2}
 
-f1 <- function(a, b) {
-  k <- 0
-  while ((k*a <= b) && k <= 1000) {
-    k <- k + 1
-  }
-  k
-}
-
-f2 <- function(a, b) {
-  vector_k <- c(0:1000)
-  k <- vector_k[(vector_k * a) > b][1]
-  k
-}
-
-print(microbenchmark(f1, f2))
+# Inserer un indice ici
 
 ```
 
-Preuve qu'on peut aussi faire du microbenchmark sans que la ligne de code soit illisible.
+```{r exo5-solution, exercise.lines = 1}
+
+# Inserer la solution ici
+
+```
+
+Preuve qu'on peut aussi faire du microbenchmark sans que la ligne de code soit illisible
 
 ### Exercice 6 : "Jamais deux sans trois"
 
@@ -305,7 +293,7 @@ print(microbenchmark(x <- 10, control = list( order = "block"   )))
 
 Dans la famille des arguments de controle : warmup
 
-Il permet de déterminer combien d'évaluation "dans le vide" seront faites avant de lancer les mesures. Par défaut, il vaut 2, mais on peut l'augmenter pour modéliser les situations d'exécution de code en continu.
+Il permet de déterminer combien d'évaluation "dans le vide" seront faites avant de lancer les mesures. Par défaut, il vaut 2, mais on peut l'augmenter pour modéliser les situations d'éxécution de code en continu.
 
 Essayez de modifier microbenchmark(x <- 10) avec l'argument de control warmup. En le positionnant à 0 dans un premier exemple puis à 10 dans un second.
  
@@ -339,7 +327,7 @@ question(" Constatez vous une différence en utilisant un warmup ?",
 ) 
 
 ``` 
-Les premières exécutions sont systématiquement plus lentes. 
+Les premières éxécutions sont systématiquement plus lentes. 
 
 ### Exercice 9 : Check en bois et formule de Machin
 
@@ -395,8 +383,6 @@ setup prend comme valeur une expression qui ne sera pas évaluée, mais qui sera
 Imaginons le scénario suivant. Vous êtes en train de taper un long et fastidieux code, et vous avez besoin de comparer le temps d'exécution entre la somme 2+2 et a+2, où la variable a (initialisée à 1) prend une valeur qui augmente de 1 à chaque exécution par la fonction benchmark (pourquoi pas, c'est votre code, ne jugeons pas !). Heureusement qu'il y a microbenchmark (et ce tuto !) pour vous permettre de rédiger un tel code !
 
 ```{r exo10, message=FALSE, warning=FALSE, exercise=TRUE}
-
-
 ```
 
 ```{r exo10-hint, message=FALSE, warning=FALSE}
@@ -407,35 +393,9 @@ print(microbenchmark(x <- 10, control = list( )))
 ```
 
 ```{r exo10-solution, message=FALSE, warning=FALSE}
-
 a <- 1
 f <- function(a){
   a <- a + 1
 }
-
 print(microbenchmark(2 + 2, a + 2, times = 1000L, setup = f(a)))
-
 ```
-
-## Quizz résumé
-
-Pour vérifier que vous avez bien retenu le principal, voici un petit quizz qui résume les choses importantes à savoir sur microbenchmark
-
-```{r quiz5, echo=FALSE}
-quiz(caption = "En résumé :",
-  question(" Que calcule t'on avec microbenchmark ?",
-           answer("Le temps d'exécution d'une ou plusieurs fonctions, à un instant t" , message = " Pas exactement, microbenchmark réalise le calcul à plusieurs reprises, et détermine le temps d'exécution moyen, mais aussi des temps caractéristiques, comme le maximum et le minimum"),
-           answer("Des temps d'exécution caractéristiques d'une ou plusieurs fonctions sur plusieurs tests, comme la moyenne ou les extremum", correct = TRUE, message = "Exactement, tu as bien compris quand t'en servir ! "),
-           answer("Le temps d'exécution d'un grand échantillon de fonctions pour déterminer la plus rapide", message = "c'est en effet possible, mais pas automatique. Le but est souvent de comparer 2 ou 3 méthodes pour déterminer la plus rapide en moyenne ou dans le pire des cas, selon ce qui nous intéresse")
-  ), 
-  question("Quand utiliser microbenchmark ?",
-           answer("A la fin du programme pour déterminer la vitesse que prendra mon programme lors de son exécution", message = "C'est possible mais il faut que le programme soit relativement court. Comme Microbenchmark va exécuter le programme un grand nombre de fois, si votre temps d'exécution est déja long, le calcul de microbenchmark sera excessivement long" ),
-           answer("Lorsque je veux déterminer la vitesse d'exécution d'un petit bout de code", correct = TRUE ,message = "Exactement, microbenchmark est fait pour évaluer des codes relativement courts")
-  ),
-  question("Quelle option utilise t'on pour modifier le nombre de tests de la fonction étudiée par microbenchmark ? ",
-           answer("setup", message = "Non, setup permet d'effectuer une action avant l'exécution de la fonction, sans l'évaluer"),
-           answer("check", message = "Non, check permet de vérifier que les fonctions évaluées font la même chose"),
-           answer("times", correct = TRUE, message = "Oui, tu as tout compris, tu peux maintenant utiliser microbenchmark dans tout tes programmes, et ainsi gagner jusqu'a plusieurs nanosecondes ! Le temps c'est de l'argent !")
-  )
-)
-``` 

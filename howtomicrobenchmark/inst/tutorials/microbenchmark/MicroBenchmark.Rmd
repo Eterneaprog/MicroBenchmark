@@ -375,7 +375,27 @@ question(" Les résultats avec identical et equal seront-ils différents ?",
 
 ``` 
 
-## Résumé
+### Exercice 10 : Les autres arguments, endgame
 
-### Exercice 10 :
+"Last but not least" comme diraient nos amis anglophones, voici le dernier argument de control : setup.
+setup prend comme valeur une expression qui ne sera pas évaluée, mais qui sera exécutée avant chaque expression que vous souhaitez évaluer.
 
+Imaginons le scénario suivant. Vous êtes en train de taper un long et fastidieux code, et vous avez besoin de comparer le temps d'exécution entre la somme 2+2 et a+2, où la variable a (initialisée à 1) prend une valeur qui augmente de 1 à chaque exécution par la fonction benchmark (pourquoi pas, c'est votre code, ne jugeons pas !). Heureusement qu'il y a microbenchmark (et ce tuto !) pour vous permettre de rédiger un tel code !
+
+```{r exo10, message=FALSE, warning=FALSE, exercise=TRUE}
+```
+
+```{r exo10-hint, message=FALSE, warning=FALSE}
+#La structure est celle la : control est une liste d'arguments
+print(microbenchmark(x <- 10, control = list( )))
+#Commencez par des étapes simples.
+#Initialisez tout d'abord la variable a, puis rédigez la fonction f permettant d'augmenter la valeur de a de 1.
+```
+
+```{r exo10-solution, message=FALSE, warning=FALSE}
+a <- 1
+f <- function(a){
+  a <- a + 1
+}
+print(microbenchmark(2 + 2, a + 2, times = 1000L, setup = f(a)))
+```
